@@ -7,7 +7,6 @@ const { Node } = require('../extensions/list-tree.js');
 * using Node from extensions
 */
 class BinarySearchTree {
-
   constructor() {
     this.rootNode = null;
   }
@@ -19,13 +18,13 @@ class BinarySearchTree {
   add(data) {
     this.rootNode = addWithin(this.rootNode, data);
 
-    function addWithin(params, value) {
-      if (!params) return new Node(value);
-      if (params.value === value) return params;
+    function addWithin(params, data) {
+      if (!params) return new Node(data)
+      if (params.data === data) return params;
 
-      value < params.value
-        ? params.left = addWithin(params.left, value)
-        : params.right = addWithin(params.right, value);
+      data < params.data
+        ? params.left = addWithin(params.left, data)
+        : params.right = addWithin(params.right, data);
 
       return params;
     }
@@ -34,68 +33,65 @@ class BinarySearchTree {
   has(data) {
     return searchWithin(this.rootNode, data);
 
-    function searchWithin(params, value) {
-      if (!params) {
-        return false;
-      }
-      if (params.value === value) {
-        return true;
-      }
+    function searchWithin(params, data) {
+      if (!params) return false;
+      if (params.data === data) return true;
 
-      return (value < params.value)
-        ? searchWithin(params.left, value)
-        : searchWithin(params.right, value);
+      return data < params.data
+        ? searchWithin(params.left, data)
+        : searchWithin(params.right, data);
     }
   }
 
   find(data) {
     return findWithin(this.rootNode, data);
 
-    function findWithin(params, value) {
-      if (!params) {
-        return null;
-      }
-      if (params.value === value) {
-        return params;
-      }
-      return (value < params.value)
-        ? findWithin(params.left, value)
-        : findWithin(params.right, value);
+    function findWithin(params, data) {
+      if (!params) return null;
+      if (params.data === data) return params;
+
+      return data < params.data
+        ? findWithin(params.left, data)
+        : findWithin(params.right, data);
     }
   }
 
   remove(data) {
     this.rootNode = removeNode(this.rootNode, data);
 
-    function removeNode(params, value) {
+    function removeNode(params, data) {
       if (!params) return null;
 
-      if (value < params.value) {
-        params.left = removeNode(params.left, value);
-        return params;
-      } else if (value > params.value) {
-        params.right = removeNode(params.right, value);
-        return params;
-      } else {
-        if (!params.right && !params.left) {
-          return null;
-        }
-        if (!params.left) {
-          params = params.right;
-          return params;
-        }
-        if (!params.right) {
-          params = params.left;
-          return params;
-        }
-        let minFormRight = params.right;
-        while (minFormRight.left) {
-          minFormRight = minFormRight.left
-        }
-        params.value = minFormRight.value;
-        params.right = removeNode(params.right, minFormRight.value);
+      if (data < params.data) {
+        params.left = removeNode(params.left, data);
         return params;
       }
+
+      if (data > params.data) {
+        params.right = removeNode(params.right, data);
+        return params;
+      }
+
+      if ((!params.left) && (!params.right)) {
+        return null;
+      }
+      if (!params.left) {
+        params = params.right;
+        return params;
+      }
+      if (!params.right) {
+        params = params.left;
+        return params;
+      }
+
+      let minFromRight = params.right;
+      while (minFromRight.left) {
+        minFromRight = minFromRight.left;
+      }
+      params.data = minFromRight.data;
+      params.right = removeNode(params.right, minFromRight.data);
+      return params;
+
     }
   }
 
@@ -107,7 +103,7 @@ class BinarySearchTree {
     while (node.left) {
       node = node.left;
     }
-    return node.value;
+    return node.data;
   }
 
   max() {
@@ -118,7 +114,7 @@ class BinarySearchTree {
     while (node.right) {
       node = node.right;
     }
-    return node.value;
+    return node.data;
   }
 }
 
